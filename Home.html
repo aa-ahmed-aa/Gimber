@@ -6,13 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="js/Three.js"></script>
+    <script src="js/jquery.js"></script>
     <title>Home Online Game</title>
 </head>
 <style>
-    body { margin: 0px; padding:0px; overflow: hidden;}
-    canvas { width: 100%; height: 100%;  }
+    body {
+        margin: 0px;
+        padding: 0px;
+        display: inline-block;
+        overflow: hidden;
+        position: relative;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    #UserName {
+        color:rgb(55, 255, 255);
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding:10px;
+    }
 </style>
+
 <body>
+    <div id="UserName">
+        <h1>Ahmed khaled</h1>
+    </div>
+   
+
     <script>
         var camera, scene, renderer;
         var geometry, material, mesh;
@@ -47,7 +73,7 @@
             mesh.rotation.y += 0.02;
 
             renderer.render(scene, camera);
-
+            $('#UserName').find("h1").text( "Li" );
         }    
     </script>
 </body>
