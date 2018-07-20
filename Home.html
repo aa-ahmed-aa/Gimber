@@ -5,77 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="js/Three.js"></script>
-    <script src="js/jquery.js"></script>
+
+    <!-- Javascript -->
+    <script src="JS/Libs/Three.js"></script>
+    <script src="JS/Libs/jquery.js"></script>
+    <script src="JS/GameFunctions/Main.js"></script>
+
+    <!-- CSS Game Styles -->
+    <link rel="stylesheet" href="CSS/Libs/boostrap.css">
+    <link rel="stylesheet" href="CSS/GameStyles/style.css">
+
     <title>Home Online Game</title>
 </head>
-<style>
-    body {
-        margin: 0px;
-        padding: 0px;
-        display: inline-block;
-        overflow: hidden;
-        position: relative;
-    }
-
-    canvas {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    #UserName {
-        color:rgb(55, 255, 255);
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding:10px;
-    }
-</style>
 
 <body>
     <div id="UserName">
         <h1>Ahmed khaled</h1>
     </div>
-   
-
+</body>
     <script>
-        var camera, scene, renderer;
-        var geometry, material, mesh;
-
         init();
         animate();
-
-        function init() {
-
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-            camera.position.z = 1;
-
-            scene = new THREE.Scene();
-
-            geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-            material = new THREE.MeshNormalMaterial();
-
-            mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-        }
-
-        function animate() {
-
-            requestAnimationFrame(animate);
-
-            mesh.rotation.x += 0.01;
-            mesh.rotation.y += 0.02;
-
-            renderer.render(scene, camera);
-            $('#UserName').find("h1").text( "Li" );
-        }    
     </script>
-</body>
-
 </html>
