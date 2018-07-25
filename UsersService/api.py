@@ -10,12 +10,13 @@ APP_URL = "http://127.0.0.1:5000"
 
 @app.route('/api/v1/Users', methods=['GET'])
 def get_users():
-
     data = []
-    cursor = mongo.db.Gimber.find()
+    cursor = mongo.db.Users.find({}, {"_id": 0, "update_time": 0}).limit(10)
+    for tweet in cursor:
+        print tweet
+        data.append(tweet)
 
-    print jsonify(cursor)
-    return cursor
+    return jsonify({"status": 200, "response": data})
 
 @app.route('/api/v1/Users', methods=['POST'])
 def insert_user():
@@ -27,10 +28,10 @@ def insert_user():
     else:
         id = data.get('id')
         if id:
-            if mongo.db.Gimber.find_one({"id": id}):
+            if mongo.db.Users.find_one({"id": id}):
                 return {"response": "tweet already exists."}
             else:
-                mongo.db.Gimber.insert(data)
+                mongo.db.Users.insert(data)
         else:
             return {"response": "id number missing"}
 
@@ -39,12 +40,12 @@ def insert_user():
 @app.route('/api/v1/Users/<id>', methods=['PUT'])
 def update_user(id):
     data = request.get_json()
-    mongo.db.Gimber.update({'id': id}, {'$set': data})
+    mongo.db.Users.update({'id': id}, {'$set': data})
     return redirect( url_for("get_users") )
 
 @app.route('/api/v1/Users/<id>', methods=['DELETE'])
 def delete_user( id ):
-    mongo.db.Gimber.remove({'id': id})
+    mongo.db.Users.remove({'id': id})
     return redirect(url_for("Gimber"))
 
 
