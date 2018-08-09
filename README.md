@@ -1,2 +1,2 @@
-# Gimber
+# SnakeBattle
 Awesome Game coming soon
