@@ -37,7 +37,7 @@ var drawModule = (function () {
     return color;
   }
 
-  var paint = function(){
+  var paint = function(){ 
       //set the size dynamically of the window
       w = window.innerWidth ;
       h = window.innerHeight ;
@@ -99,8 +99,8 @@ var drawModule = (function () {
 
   var createFood = function() {
       food = {
-        x: Math.floor((Math.random() * ( w / 10 ) ) + 1),
-        y: Math.floor((Math.random() * ( h / 10 ) ) + 1)
+        x: Math.floor((Math.random() * ( w / 11 ) ) + 1),
+        y: Math.floor((Math.random() * ( h / 11 ) ) + 1)
       }
       console.log(food);
       for (var i=0; i>snake.length; i++) {
@@ -108,8 +108,8 @@ var drawModule = (function () {
         var snakeY = snake[i].y;
       
         if (food.x===snakeX && food.y === snakeY || food.y === snakeY && food.x===snakeX) {
-          food.x = Math.floor((Math.random() * ( w / 10 ) ) + 1);
-          food.y = Math.floor((Math.random() * ( h / 10 ) ) + 1);
+          food.x = Math.floor((Math.random() * ( w / 11 ) ) + 1);
+          food.y = Math.floor((Math.random() * ( h / 11 ) ) + 1);
         }
       }
   }

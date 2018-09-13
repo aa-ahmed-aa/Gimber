@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- scripts and styles -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/firebase.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    
+
+    <!-- Init firebase -->
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBWYb1D8opNknKWfrVTtn721KuPbRbDDYE",
+            authDomain: "snakegame-2b57d.firebaseapp.com",
+            databaseURL: "https://snakegame-2b57d.firebaseio.com",
+            projectId: "snakegame-2b57d",
+            storageBucket: "snakegame-2b57d.appspot.com",
+            messagingSenderId: "345760546877"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+    <title>SnakeGame Create Room View</title>
+</head>
+
+<body>
+    <div class="row input-group join_game">
+        <input class="form-control col-md-3" placeholder="Enter Your User Name" id="username_create" name="username" type="text">
+        <button class="btn btn-outline-success" id="create_room">Create Room</button>
+        <div style="position:absolute;top: 110%;left: 13.5%;">
+                <!-- Join trigger modal -->
+                <a href="#" class="join" >or Join Game</a>
+            </div>
+    </div>
+    
+    
+
+
+    <!-- Modal -->
+    <div class="modal fade custom_modal" id="JoinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Join Curent Game</h5>
+                <div type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div style="padding-bottom:10px;" class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Username</span>
+                    </div>
+                    <input id="username_join" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Room Id</span>
+                        </div>
+                        <input id="room_id" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    </div>
+
+                <!-- <input class="form-control col-md-12" placeholder="Enter Your User Name"  name="username" type="text">
+                <input class="form-control col-md-12" placeholder="Enter Room id" id="room" name="room" type="text"> -->
+            </div>
+
+            <div class="modal-footer">
+                <div class="btn btn-success">Join</div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <!-- LOADER -->
+    <div class="container square_loader" style="display: none;">
+    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loader">
+                    <div class="loader-inner">
+                        <div class="loading one"></div>
+                    </div>
+                    <div class="loader-inner">
+                        <div class="loading two"></div>
+                    </div>
+                    <div class="loader-inner">
+                        <div class="loading three"></div>
+                    </div>
+                    <div class="loader-inner">
+                        <div class="loading four"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    </div>
+
+    <script>
+        const db = firebase.database();
+        const users_ref = db.ref('users');
+        const rooms_ref = db.ref('rooms');
+
+        currentRoomId = null;
+        currentPlayerId = null;
+
+
+        // Create Room
+        $('#create_room').on('click', function(){
+            username = $('#username_create').val();
+
+            player_master = {
+                username: username,
+                color: "#04ff14"
+            };
+            
+            $('.square_loader').show();
+            createRoom(null, username);
+        });
+
+        
+        //Username Validation
+        $('#create_room').prop('disabled', true);
+        $('#username_create').on('keyup',function(){
+            if( $('#username_create').val() != '' )
+            {
+                $('#create_room').prop('disabled', false);
+            }else{
+                $('#create_room').prop('disabled', true);
+            }
+        });
+
+        function createRoom(room_id = null , username)
+        {
+            //if room_id is null
+            if(room_id == null )
+            {
+                //create room and add current player to the room
+                player = {
+                    username: player_master.username,
+                    color: player_master.color,
+                    position_x: 10, //should be random in range of the field and not another player is in 
+                    position_y: 10, //should be random in range of the field and not another player is in
+                    score : 0
+                }
+                room = {
+                    width : "50px",
+                    height : "50px",
+                    time : 60
+                }
+                
+                currentRoomId = rooms_ref.push(room).key;
+                currentPlayerId = db.ref('rooms/' + currentRoomId + '/players').push(player).key;
+                window.location = "snakegame.html";
+            }
+            else if( room_id != null ) //else if room_id not empty 
+            {
+                //check if this room exists
+                //then join this room
+            }
+        }
+
+        player = {
+            username: "test1",
+            color: "#04ff14",
+            position_x: 10, //should be random in range of the field and not another player is in 
+            position_y: 10, //should be random in range of the field and not another player is in
+            score : 0
+        }
+
+        // var room_id = rooms_ref.push(room).key;
+
+        // console.log(room_id);
+        // console.log(usersRef);
+        // users_ref.push({
+        //     email: "ahmed@ali.com",
+        //     name: "ahmedkhaled",
+        //     age: 100 
+        // });
+        // users_ref.on("child_added", snap => {
+        //     let user = snap.val();
+        //     console.log( "user name is :" + user.name + " :::: snap key = " + snap.key );
+        // });
+
+        // Modal Controls
+        $('.join').on('click', function(){
+            $('#JoinModal').modal('toggle');
+        });
+        
+        $('body').on('click', function(){
+            $('#myModal').modal('toggle');
+        });
+    </script>
+</body>
+
+</html>
