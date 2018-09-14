@@ -1,6 +1,8 @@
 # SnakeBattle :snake:
 Two players join the field they have 2 minuts in every round to collect food the one that have more food is the winner after the three rounds, the rounds are getting harder as we progress and the speed, terliport, and disapearing mode can make you SO THIS IS NOT SOME EASY GAME :golf:.
 
+## DEMO & Screen shots
+    <img src="http://www.creativeacademymanchester.co.uk/wp-content/uploads/2016/11/coming-soon.png"/> 
 ## Technologies 
 - Firebase
 - Three.js
