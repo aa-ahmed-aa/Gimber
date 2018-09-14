@@ -3,6 +3,7 @@ Two players join the field they have 2 minuts in every round to collect food the
 
 ## DEMO & Screen shots
 <img src="http://www.creativeacademymanchester.co.uk/wp-content/uploads/2016/11/coming-soon.png"/> 
+
 ## Technologies 
 - Firebase
 - Three.js
