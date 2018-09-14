@@ -74,7 +74,7 @@
             </div>
 
             <div class="modal-footer">
-                <div class="btn btn-success">Join</div>
+                <button class="btn btn-outline-success" id="join_button">Join</button>
             </div>
         </div>
         </div>
@@ -124,9 +124,22 @@
             };
             
             $('.square_loader').show();
-            createRoom(null, username);
+            createRoom(null, player_master);
         });
 
+        //Join Room
+        $('#join_button').on('click', function (){
+            username = $('#username_join').val();
+
+            player_master = {
+                username: username,
+                color: "#04ff14"
+            };
+
+            room_id = $('#room_id').val();
+
+            createRoom(room_id , player_master);
+        });
         
         //Username Validation
         $('#create_room').prop('disabled', true);
@@ -139,15 +152,31 @@
             }
         });
 
-        function createRoom(room_id = null , username)
+        //Join Menu Validation
+        $('#join_button').prop('disabled', true);
+        setInterval(function(){
+            
+            if( $('#room_id').val() != '' && $('#username_join').val() != '' )
+            {
+                $('#join_button').prop('disabled', false);
+            }else{
+                $('#join_button').prop('disabled', true);
+            }
+
+         }, 10);
+
+        /*
+         * Create Room function to create room or join current room 
+         */
+        function createRoom(room_id = null , Player)
         {
             //if room_id is null
             if(room_id == null )
             {
                 //create room and add current player to the room
                 player = {
-                    username: player_master.username,
-                    color: player_master.color,
+                    username: Player.username,
+                    color: Player.color,
                     position_x: 10, //should be random in range of the field and not another player is in 
                     position_y: 10, //should be random in range of the field and not another player is in
                     score : 0
@@ -164,17 +193,33 @@
             }
             else if( room_id != null ) //else if room_id not empty 
             {
-                //check if this room exists
-                //then join this room
+                isRoomExisted = false;
+                rooms_ref.once("value", snap => {
+                    //Get all rooms and search for the current room
+                    all_rooms = Object.keys( snap.val() );
+                    isRoomExisted = $.inArray( room_id , all_rooms );
+                    
+                    if( isRoomExisted == 1 )
+                    {
+                        console.log( "adding User : " + username + " to the room : " + room_id );
+                        //add the current username to this room
+                        player = {
+                            username: Player.username,
+                            color: Player.color,
+                            position_x: 10, //should be random in range of the field and not another player is in 
+                            position_y: 10, //should be random in range of the field and not another player is in
+                            score : 0
+                        }
+                        currentPlayerId = db.ref('rooms/' + room_id + '/players').push(player).key;
+                        alert(currentPlayerId);
+                        window.location = "snakegame.html";
+                    }
+                    else{
+                        alert(" Please Enter Valid Room ID");
+                    }
+                    
+                });
             }
-        }
-
-        player = {
-            username: "test1",
-            color: "#04ff14",
-            position_x: 10, //should be random in range of the field and not another player is in 
-            position_y: 10, //should be random in range of the field and not another player is in
-            score : 0
         }
 
         // var room_id = rooms_ref.push(room).key;
