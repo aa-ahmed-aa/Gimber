@@ -34,18 +34,18 @@
 <body>
     <div class="row input-group join_game">
         <input class="form-control col-md-3" placeholder="Enter Your User Name" id="username_create" name="username" type="text">
-        <button class="btn btn-outline-success" id="create_room">Create Room</button>
-        <div style="position:absolute;top: 110%;left: 13.5%;">
+        <button class="btn btn-outline-success" id="create_room">Start Game</button>
+        <!-- <div style="position:absolute;top: 110%;left: 13.5%;"> -->
                 <!-- Join trigger modal -->
-                <a href="#" class="join" >or Join Game</a>
-            </div>
+                <!-- <a href="#" class="join" >or Join Game</a> -->
+            <!-- </div> -->
     </div>
     
     
 
 
     <!-- Modal -->
-    <div class="modal fade custom_modal" id="JoinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!-- <div class="modal fade custom_modal" id="JoinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -78,7 +78,7 @@
             </div>
         </div>
         </div>
-    </div>
+    </div> -->
 
 
     <!-- LOADER -->
@@ -124,22 +124,23 @@
             };
             
             $('.square_loader').show();
-            createRoom(null, player_master);
+            startGameRooms(player_master);
+            // createRoom(null, player_master);
         });
 
         //Join Room
-        $('#join_button').on('click', function (){
-            username = $('#username_join').val();
+        // $('#join_button').on('click', function (){
+        //     username = $('#username_join').val();
 
-            player_master = {
-                username: username,
-                color: "#04ff14"
-            };
+        //     player_master = {
+        //         username: username,
+        //         color: "#04ff14"
+        //     };
 
-            room_id = $('#room_id').val();
+        //     room_id = $('#room_id').val();
 
-            createRoom(room_id , player_master);
-        });
+        //     createRoom(room_id , player_master);
+        // });
         
         //Username Validation
         $('#create_room').prop('disabled', true);
@@ -153,17 +154,49 @@
         });
 
         //Join Menu Validation
-        $('#join_button').prop('disabled', true);
-        setInterval(function(){
+        // $('#join_button').prop('disabled', true);
+        // setInterval(function(){
             
-            if( $('#room_id').val() != '' && $('#username_join').val() != '' )
-            {
-                $('#join_button').prop('disabled', false);
-            }else{
-                $('#join_button').prop('disabled', true);
-            }
+        //     if( $('#room_id').val() != '' && $('#username_join').val() != '' )
+        //     {
+        //         $('#join_button').prop('disabled', false);
+        //     }else{
+        //         $('#join_button').prop('disabled', true);
+        //     }
 
-         }, 10);
+        //  }, 10);
+
+         /*
+          * This Will create game rooms if not existed and join one if there is room with
+          * only 1 player that is waiting for game start 
+          */
+        function startGameRooms(player_master)
+        {
+            //loop on the rooms
+            rooms_ref.once("value", snap => { 
+                current_room = snap.val();
+                all_rooms = Object.keys( current_room );
+                // var alreadyJoined = false;
+
+                for(var i = 0 ; i < all_rooms.length ; i++)
+                {
+                    // if this room is full 
+                    if( Object.keys(current_room[all_rooms[i]].players).length >= 2 ){
+                        //continue
+                        console.log("full players Room_id : " + all_rooms[i]);
+                    
+                    }else{ //else if this room can have more player (did not have 2 players)
+                        //join this room
+                        console.log("You can join this room Room_id : " + all_rooms[i]);
+                        createRoom( all_rooms[i] , player_master);
+                        // alreadyJoined = true;
+                        return;
+                    }
+                }
+
+                createRoom( null , player_master);
+            } );
+        }
 
         /*
          * Create Room function to create room or join current room 
@@ -197,8 +230,16 @@
                 rooms_ref.once("value", snap => {
                     //Get all rooms and search for the current room
                     all_rooms = Object.keys( snap.val() );
-                    isRoomExisted = $.inArray( room_id , all_rooms );
                     
+                    for(var i = 0; i < all_rooms.length ; i++)
+                    {
+                        if( all_rooms[i] == room_id )
+                        {
+                            isRoomExisted = true;
+                        }
+                    }
+                    console.log(isRoomExisted);
+
                     if( isRoomExisted == 1 )
                     {
                         console.log( "adding User : " + username + " to the room : " + room_id );
@@ -211,7 +252,6 @@
                             score : 0
                         }
                         currentPlayerId = db.ref('rooms/' + room_id + '/players').push(player).key;
-                        alert(currentPlayerId);
                         window.location = "snakegame.html";
                     }
                     else{
@@ -222,28 +262,14 @@
             }
         }
 
-        // var room_id = rooms_ref.push(room).key;
-
-        // console.log(room_id);
-        // console.log(usersRef);
-        // users_ref.push({
-        //     email: "ahmed@ali.com",
-        //     name: "ahmedkhaled",
-        //     age: 100 
+        // // Modal Controls
+        // $('.join').on('click', function(){
+        //     $('#JoinModal').modal('toggle');
         // });
-        // users_ref.on("child_added", snap => {
-        //     let user = snap.val();
-        //     console.log( "user name is :" + user.name + " :::: snap key = " + snap.key );
-        // });
-
-        // Modal Controls
-        $('.join').on('click', function(){
-            $('#JoinModal').modal('toggle');
-        });
         
-        $('body').on('click', function(){
-            $('#myModal').modal('toggle');
-        });
+        // $('body').on('click', function(){
+        //     $('#myModal').modal('toggle');
+        // });
     </script>
 </body>
 
